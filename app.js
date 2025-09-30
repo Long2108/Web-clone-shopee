@@ -255,6 +255,80 @@ function init(){
 
 document.addEventListener('DOMContentLoaded', init);
 
+// Auth modal wiring
+(function(){
+	const openBtn = document.getElementById('openAuth');
+	const modal = document.getElementById('authModal');
+	const closeBtn = document.getElementById('authClose');
+	const backdrop = document.getElementById('authBackdrop');
+	const toSignup = document.getElementById('toggleToSignup');
+	const toSignin = document.getElementById('toggleToSignin');
+	const signInForm = document.getElementById('signInForm');
+	const signUpForm = document.getElementById('signUpForm');
+	const signinBtn = document.getElementById('signinBtn');
+	const signupBtn = document.getElementById('signupBtn');
+
+	function open(){ modal.hidden = false; }
+	function close(){ modal.hidden = true; }
+	function showSignin(){ signInForm.hidden = false; signUpForm.hidden = true; }
+	function showSignup(){ signInForm.hidden = true; signUpForm.hidden = false; }
+
+	if(openBtn){ openBtn.addEventListener('click', open); }
+	if(closeBtn){ closeBtn.addEventListener('click', close); }
+	if(backdrop){ backdrop.addEventListener('click', close); }
+	if(toSignup){ toSignup.addEventListener('click', showSignup); }
+	if(toSignin){ toSignin.addEventListener('click', showSignin); }
+
+	if(signinBtn){
+		signinBtn.addEventListener('click', ()=>{
+			const email = document.getElementById('signinEmail').value.trim();
+			const password = document.getElementById('signinPassword').value.trim();
+			if(!email || !password){ alert('Please enter email and password.'); return; }
+			alert('Signed in (demo).');
+			close();
+		});
+	}
+	if(signupBtn){
+		signupBtn.addEventListener('click', ()=>{
+			const username = document.getElementById('signupUsername').value.trim();
+			const email = document.getElementById('signupEmail').value.trim();
+			const phone = document.getElementById('signupPhone').value.trim();
+			const password = document.getElementById('signupPassword').value.trim();
+			if(!username || !email || !phone || !password){ alert('Please complete all fields.'); return; }
+			alert('Account created (demo).');
+			showSignin();
+		});
+	}
+})();
+
+// Auth modal sliding toggle
+(function(){
+	const toSignup = document.getElementById('toggleToSignup');
+	const toSignin = document.getElementById('toggleToSignin');
+	const container = document.getElementById('authContainer');
+	if(!container) return;
+	if(toSignup){ toSignup.addEventListener('click', ()=>{ container.classList.remove('sign-in'); container.classList.add('sign-up'); }); }
+	if(toSignin){ toSignin.addEventListener('click', ()=>{ container.classList.remove('sign-up'); container.classList.add('sign-in'); }); }
+})();
+
+// Password peek toggle
+(function(){
+	document.addEventListener('click', (e)=>{
+		const btn = e.target.closest('.peek-btn');
+		if(!btn) return;
+		const id = btn.getAttribute('data-target');
+		const input = document.getElementById(id);
+		if(!input) return;
+		if(input.type === 'password'){
+			input.type = 'text';
+			btn.setAttribute('aria-label','Hide password');
+		} else {
+			input.type = 'password';
+			btn.setAttribute('aria-label','Show password');
+		}
+	});
+})();
+
 
 
 
