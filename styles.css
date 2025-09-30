@@ -1,17 +1,12 @@
-:root{--bg:#0b0f14;--panel:#121821;--muted:#2a3544;--text:#e7edf6;--sub:#a6b1c2;--brand:#ff6b3d;--brand-2:#ff9f43;--ok:#22c55e;--danger:#ef4444}
+:root{--bg:#e3e8f0;--panel:#070606;--muted:#e21212;--text:#e6e6e6;--sub:#942056;--brand:#3dffd2;--brand-2:#ff9f43;--ok:#22c55e;--danger:#ef4444}
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;min-height:100%}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;}
 img{max-width:100%;display:block}
 .container{width:min(1100px,92%);margin-inline:auto}
 .button{background:var(--muted);color:var(--text);border:none;padding:.6rem 1rem;border-radius:10px;cursor:pointer}
 .button.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#0b0f14;font-weight:700}
 .icon-button{background:transparent;color:var(--text);border:1px solid var(--muted);padding:.4rem .6rem;border-radius:10px;cursor:pointer}
 .logo{font-weight:900;color:var(--text);text-decoration:none;letter-spacing:.5px}
-
-/* Soft glow background */
-.soft-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
-	background:radial-gradient(circle at 50% 50%, rgba(255,113,18,.55), transparent 50%);mix-blend-mode:multiply}
-.page-root{position:relative;z-index:1;min-height:100vh}
 
 .site-header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.8);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06)}
 .header-inner{display:flex;align-items:center;gap:1rem;padding:.8rem 0}
@@ -31,7 +26,7 @@ img{max-width:100%;display:block}
 .card .meta{color:var(--sub);font-size:.9rem}
 .card .cta{display:flex;gap:.5rem;margin-top:.6rem}
 
-.cart{position:fixed;right:1rem;top:1rem;width:min(420px,92%);background:var(--panel);border:1px solid var(--muted);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:flex;flex-direction:column;max-height:90vh}
+.cart{position:fixed;right:1rem;top:4.5rem;z-index:1000;width:min(420px,92%);background:var(--panel);border:1px solid var(--muted);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:flex;flex-direction:column;max-height:90vh}
 .cart[hidden]{display:none}
 .cart-header{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:1px solid var(--muted)}
 .cart-items{padding:0 1rem;overflow:auto}
@@ -44,36 +39,11 @@ img{max-width:100%;display:block}
 .checkout,.sell{background:var(--panel);border:1px solid var(--muted);border-radius:16px;padding:1rem;margin:1rem auto}
 .checkout-form .row,.sell-form .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .checkout-form input, .checkout-form textarea, .checkout-form select,
-.sell-form input, .sell-form textarea, .sell-form select{background:#0e131b;border:1px solid var(--muted);color:var(--text);padding:.6rem .7rem;border-radius:10px;width:100%}
+.sell-form input, .sell-form textarea, .sell-form select{background:#98a8e8;border:1px solid var(--muted);color:var(--text);padding:.6rem .7rem;border-radius:10px;width:100%}
 .order-result{margin-top:1rem;padding:1rem;border:1px solid var(--muted);border-radius:12px;background:#0e131b}
 
-.site-footer{border-top:1px solid rgba(255,255,255,.06);margin-top:2rem}
+.site-footer{border-top:1px solid 	rgba(255,255,255,.06);margin-top:2rem}
 .site-footer .container{padding:1rem 0;color:var(--sub)}
-
-/* Modal */
-.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center}
-.modal[hidden]{display:none}
-.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)}
-.modal-panel{position:relative;width:min(480px,92%);background:var(--panel);border:1px solid var(--muted);border-radius:16px;padding:1rem;box-shadow:0 20px 60px rgba(0,0,0,.5);z-index:1}
-.modal-close{position:absolute;top:.6rem;right:.6rem}
-.auth-forms{display:block}
-.auth-form{display:flex;flex-direction:column;gap:.6rem}
-.auth-form input{background:#0e131b;border:1px solid var(--muted);color:var(--text);padding:.6rem .7rem;border-radius:10px}
-.link{color:var(--brand-2);cursor:pointer}
-
-/* Auth sliding forms (scoped) */
-.auth-container{width:420px;height:560px;background:rgba(255,255,255,0.06);border-radius:20px;backdrop-filter:blur(15px);box-shadow:0 25px 60px rgba(0,0,0,0.7), inset 0 0 40px rgba(255,255,255,0.05);overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.1);margin-inline:auto}
-.auth-container .form-box{width:200%;height:100%;display:flex;transition:transform 1s cubic-bezier(0.77, 0, 0.175, 1)}
-.auth-container .form{width:50%;padding:50px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-.auth-container .form h2{font-size:2.4em;font-weight:700;color:#fff;margin-bottom:25px;text-shadow:0 0 25px rgba(200,150,255,0.6);letter-spacing:1px}
-.auth-container.sign-in .form-box{transform:translateX(0)}
-.auth-container.sign-up .form-box{transform:translateX(-50%)}
-.auth-container .form input{width:100%}
-
-/* Auth input and peek button */
-.modal .input-wrap{position:relative;width:100%}
-.modal .input-wrap input{font-size:1.5rem;padding:1rem 2rem;padding-right:4rem;border-radius:6px;border:1px solid #888;background:rgba(255,255,255,0.15);color:#111;outline:none}
-.modal .peek-btn{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);border:none;background:transparent;cursor:pointer;color:#888}
 
 @media (max-width: 1024px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width: 768px){
@@ -86,4 +56,47 @@ img{max-width:100%;display:block}
 
 
 
+/* --- Auth dialog --- */
+.user-menu{display:flex;align-items:center;gap:.5rem}
+.auth-dialog{border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:0;background:rgba(255,255,255,.06);color:var(--text);width:min(420px,92%);backdrop-filter:blur(15px);box-shadow:0 25px 60px rgba(0,0,0,.7), inset 0 0 40px rgba(255,255,255,.05)}
+.auth-dialog::backdrop{background:rgba(0,0,0,.6)}
+.auth-form{padding:0}
+.auth-header{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;border-bottom:1px solid var(--muted)}
+.auth-header #authTitle{font-size:1.6em;font-weight:800;text-shadow:0 0 25px rgba(200,150,255,.6);letter-spacing:1px}
+/* Hide legacy tabs (we use the bottom toggle instead) */
+.auth-tabs{display:none}
+.auth-body{padding:1.2rem 1rem 0}
+.auth-body{position:relative;overflow:hidden}
+.auth-body .slide-wrapper{width:100%;height:100%;position:relative}
+.auth-body .slide-forms{width:200%;display:flex;gap:0;transition:transform 1s cubic-bezier(.77,0,.175,1)}
+.auth-body.sign-in .slide-forms{transform:translateX(0)}
+.auth-body.sign-up .slide-forms{transform:translateX(-50%)}
+.auth-body .slide-forms > .panel{width:50%;padding:1rem;display:flex;flex-direction:column;align-items:center}
+.auth-body .slide-forms > .panel > *{width:100%;max-width:320px}
+.auth-body .panel{transition:transform 1s cubic-bezier(.77,0,.175,1), opacity .5s}
+.auth-body label{display:grid;gap:.4rem;margin:.5rem 0}
+.auth-body input{background:rgb(6, 4, 4);border:1px solid rgb(0, 0, 0);color:#fff;padding:.75rem .9rem;padding-right:3rem;border-radius:12px;font-size:1rem;outline:none;box-shadow:inset 0 2px 6px rgba(0,0,0,.35)}
+.auth-body input::placeholder{color:rgba(255,255,255,.6)}
+.auth-error{color:var(--danger);padding:0 1rem 1rem}
+.auth-actions{display:flex;gap:.5rem;align-items:center;margin-top:.8rem}
+.auth-actions .button.primary{width:100%;max-width:320px;height:48px;border-radius:12px;background:linear-gradient(180deg,#020102,#a06bff);box-shadow:0 8px 24px rgba(128,96,255,.4)}
+.auth-actions .button{height:40px;border-radius:10px}
+.social-sep{margin:1rem 0 .4rem;color:var(--sub);font-size:.9rem;text-align:center}
+.social-buttons{display:flex;gap:.5rem;flex-wrap:wrap}
+.social-buttons .button{flex:1;min-width:140px}
+
+/* Smaller inputs only in Register panel */
+#authDialog .panel[data-panel="register"] input{font-size:1rem;padding:.7rem .9rem;padding-right:2rem}
+
+/* Social buttons icons spacing */
+.social-buttons .icon{margin-right:.35rem}
+
+/* Make password fields support peek button */
+.auth-body .password-field{position:relative}
+.auth-body .peek-btn{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);border:none;background:transparent;cursor:pointer;color:#888}
+
+/* Toggle box below slider */
+.toggle-box{display:flex;justify-content:center;padding:1rem 0 1.2rem}
+.toggle-box p{margin:0;color:var(--sub)}
+.toggle-box a{cursor:pointer;color:#a06bff;font-weight:800;margin-left:.4rem;text-decoration:underline}
 

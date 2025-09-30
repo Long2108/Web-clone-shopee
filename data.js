@@ -12,7 +12,9 @@ const BUILTIN_PRODUCTS = [
 
 const STORAGE_KEYS = {
 	USER_PRODUCTS: 'shoplite_user_products',
-	CART: 'shoplite_cart'
+	CART: 'shoplite_cart',
+	USERS: 'shoplite_users',
+	AUTH_USER: 'shoplite_auth_user'
 };
 
 function readLocalStorageJson(key, fallback){
@@ -43,5 +45,48 @@ function setCart(cart){
 }
 
 
+// --- Simple auth utilities (demo only; do not use in production) ---
+function getUsers(){
+	return readLocalStorageJson(STORAGE_KEYS.USERS, []);
+}
+function saveUsers(users){
+	writeLocalStorageJson(STORAGE_KEYS.USERS, users);
+}
+function findUserByEmail(email){
+	const users = getUsers();
+	return users.find(u => u.email.toLowerCase() === String(email).toLowerCase()) || null;
+}
+function registerUser({ name, email, password }){
+	const existing = findUserByEmail(email);
+	if(existing) throw new Error('Email đã được sử dụng');
+	const user = { id: 'u-' + Date.now(), name, email, password };
+	const users = getUsers();
+	users.push(user);
+	saveUsers(users);
+	return user;
+}
+function authenticateUser({ email, password }){
+	const user = findUserByEmail(email);
+	if(!user || user.password !== password) throw new Error('Email hoặc mật khẩu không đúng');
+	return user;
+}
+function setCurrentUser(user){
+	writeLocalStorageJson(STORAGE_KEYS.AUTH_USER, user ? { id: user.id, name: user.name, email: user.email } : null);
+}
+function getCurrentUser(){
+	return readLocalStorageJson(STORAGE_KEYS.AUTH_USER, null);
+}
+function logoutCurrentUser(){
+	try{ localStorage.removeItem(STORAGE_KEYS.AUTH_USER); }catch{}
+}
 
+// --- Forgot password (demo) ---
+function requestPasswordReset(email){
+	const user = findUserByEmail(email);
+	if(!user) throw new Error('Email không tồn tại');
+	// In a real app, send email. Here we simulate and store a token timestamp
+	const key = 'shoplite_reset_'+user.id;
+	try{ localStorage.setItem(key, String(Date.now())); }catch{}
+	return true;
+}
 

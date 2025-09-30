@@ -1,16 +1,15 @@
-<!doctype html>
-<html lang="en">
+			<!doctype html>
+<html lang="vi">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopLite — Mua và bán</title>
 <link rel="stylesheet" href="assets/styles.css">
 </head>
-<body style="background:#ffffff;">
-<div aria-hidden="true" style="position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle at center, #FF7112, transparent);opacity:.3;mix-blend-mode:multiply"></div>
-<div style="position:relative;z-index:1;min-height:100vh;">
+<body>
 <header class="site-header">
 	<div class="container header-inner">
-		<a class="logo" href="#">ShopLite-Buy and Sell</a>
+		<a class="logo" href="#">ShopLite</a>
 		<form id="searchForm" class="search">
 			<input id="searchInput" type="search" placeholder="Search for products…" aria-label="Search">
 			<button type="submit">Tìm kiếm</button>
@@ -18,7 +17,11 @@
 		<nav class="actions">
 			<button id="cartButton" class="icon-button" aria-haspopup="dialog" aria-controls="cartDrawer">Giỏ hàng (<span id="cartCount">0</span>)</button>
 			<a id="sellLink" class="button" href="#sell">Bán</a>
-			<button id="openAuth" class="button">Đăng nhập</button>
+			<button id="loginButton" class="button" type="button">Sign In/ Sign Up</button>
+			<div id="userMenu" class="user-menu" hidden>
+				<span id="userName"></span>
+				<button id="logoutButton" class="icon-button" type="button">Sign Out</button>
+			</div>
 		</nav>
 	</div>
 </header>
@@ -53,6 +56,92 @@
 		<button id="checkoutButton" class="button primary">Thanh toán</button>
 	</div>
 </aside>
+
+<dialog id="authDialog" class="auth-dialog" aria-labelledby="authTitle">
+	<form id="authForm" method="dialog" class="auth-form">
+		<div class="auth-header">
+			<h2 id="authTitle">Sign In</h2>
+			<button type="button" id="closeAuth" class="icon-button" aria-label="Đóng">×</button>
+		</div>
+		<div class="auth-tabs">
+			<button type="button" data-tab="login" class="tab active">Sign In</button>
+			<button type="button" data-tab="register" class="tab">Sign Up</button>
+		</div>
+		<div class="auth-body sign-in">
+			<div class="slide-wrapper">
+				<div class="slide-forms">
+					<div class="panel" data-panel="login">
+				<label>Email
+					<input id="loginEmail" type="email" required>
+				</label>
+				<label>Password
+					<span class="password-field">
+						<input id="loginPassword" type="password" required>
+						<button type="button" class="peek-btn" data-target="loginPassword" aria-label="Hiện/ẩn mật khẩu">👁</button>
+					</span>
+				</label>
+				<div class="auth-actions">
+					<button id="loginSubmit" class="button primary" type="submit">Sign In</button>
+					<button id="forgotPassword" class="button" type="button">Forget Password?</button>
+				</div>
+				<div class="social-sep">Or Continue With</div>
+				<div class="social-buttons">
+					<button id="facebookLogin" class="button" type="button"><span class="icon">👍</span>Facebook</button>
+					<button id="phoneLogin" class="button" type="button"><span class="icon">📱</span>Number</button>
+				</div>
+				</div>
+				<div class="panel" data-panel="register">
+				<label>Name
+					<input id="regName" required>
+				</label>
+				<label>Email
+					<input id="regEmail" type="email" required>
+				</label>
+				<label>Password
+					<span class="password-field">
+						<input id="regPassword" type="password" minlength="4" required>
+						<button type="button" class="peek-btn" data-target="regPassword" aria-label="Hiện/ẩn mật khẩu">👁</button>
+					</span>
+				</label>
+				<button id="registerSubmit" class="button primary" type="submit">Create Account</button>
+				<div class="social-sep">Or Sign Up With</div>
+				<div class="social-buttons">
+					<button id="facebookSignup" class="button" type="button"><span class="icon">👍</span>Facebook</button>
+					<button id="phoneSignup" class="button" type="button"><span class="icon">📱</span>Number</button>
+				</div>
+				</div>
+				</div>
+			</div>
+			<div class="toggle-box">
+				<p>
+					<span id="toggleText">No account? </span>
+					<a id="toggleBtn">Sign Up</a>
+				</p>
+			</div>
+			<div class="panel" data-panel="forgot" hidden>
+				<p>Nhập email để đặt lại mật khẩu. Chúng tôi sẽ gửi liên kết đặt lại (mô phỏng).</p>
+				<label>Email
+					<input id="forgotEmail" type="email" required>
+				</label>
+				<button id="forgotSubmit" class="button primary" type="button">Gửi liên kết đặt lại</button>
+			</div>
+			<div class="panel" data-panel="phone" hidden>
+				<p>Đăng nhập/Đăng ký bằng số điện thoại (mô phỏng OTP: 1234).</p>
+				<label>Phone Number
+					<input id="phoneNumber" type="tel" placeholder="0901234567" required>
+				</label>
+				<label>Mã xác thực (OTP)
+					<input id="phoneCode" inputmode="numeric" placeholder="1234">
+				</label>
+				<div class="auth-actions">
+					<button id="sendOtp" class="button" type="button">Send code OTP</button>
+					<button id="confirmOtp" class="button primary" type="button">Comfirm</button>
+				</div>
+			</div>
+		</div>
+		<p id="authError" class="auth-error" role="alert" hidden></p>
+	</form>
+</dialog>
 
 <section id="checkoutSection" class="checkout container" hidden>
 	<h2>Thanh toán</h2>
@@ -112,54 +201,14 @@
 	</form>
 </section>
 
-<!-- Auth Modal -->
-<div id="authModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle" hidden>
-	<div class="modal-backdrop" id="authBackdrop"></div>
-	<div class="modal-panel">
-		<button class="icon-button modal-close" id="authClose" aria-label="Close">×</button>
-		<div class="auth-container sign-in" id="authContainer">
-			<div class="form-box">
-				<div class="form" id="signInPane">
-					<h2 id="authTitle">Sign In</h2>
-					<input type="email" id="signinEmail" placeholder="Email" required>
-					<div class="input-wrap">
-						<input type="password" id="signinPassword" placeholder="Password" required>
-						<button type="button" class="peek-btn" aria-label="Show password" data-target="signinPassword">👁</button>
-					</div>
-					<button class="button primary" id="signinBtn">Login</button>
-					<div class="toggle-box">
-						<p><span id="toggleText">Don't have an account?</span> <a id="toggleToSignup" class="link">Sign Up</a></p>
-					</div>
-				</div>
-				<div class="form" id="signUpPane">
-					<h2>Sign Up</h2>
-					<input type="text" id="signupUsername" placeholder="User name" required>
-					<input type="email" id="signupEmail" placeholder="Email" required>
-					<input type="number" id="signupPhone" placeholder="Phone number" required>
-					<div class="input-wrap">
-						<input type="password" id="signupPassword" placeholder="Password" required>
-						<button type="button" class="peek-btn" aria-label="Show password" data-target="signupPassword">👁</button>
-					</div>
-					<button class="button primary" id="signupBtn">Register</button>
-					<div class="toggle-box">
-						<p><span>Already have an account?</span> <a id="toggleToSignin" class="link">Sign In</a></p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
 <footer class="site-footer">
 	<div class="container">
 		<p>© <span id="year"></span> ShopLite. Not affiliated with Shopee.</p>
 	</div>
 </footer>
-</div>
 
 <script src="assets/data.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>
-
 

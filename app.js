@@ -26,7 +26,37 @@ const dom = {
 	sellImage: document.getElementById('sellImage'),
 	sellDescription: document.getElementById('sellDescription'),
 	year: document.getElementById('year'),
-	categoriesList: document.getElementById('categoriesList')
+	categoriesList: document.getElementById('categoriesList'),
+	loginButton: document.getElementById('loginButton'),
+	userMenu: document.getElementById('userMenu'),
+	userName: document.getElementById('userName'),
+	logoutButton: document.getElementById('logoutButton'),
+	authDialog: document.getElementById('authDialog'),
+	authForm: document.getElementById('authForm'),
+	closeAuth: document.getElementById('closeAuth'),
+    authTabs: document.querySelectorAll('#authDialog .tab'),
+	authPanels: document.querySelectorAll('#authDialog .panel'),
+	loginEmail: document.getElementById('loginEmail'),
+	loginPassword: document.getElementById('loginPassword'),
+	regName: document.getElementById('regName'),
+	regEmail: document.getElementById('regEmail'),
+	regPassword: document.getElementById('regPassword'),
+	authError: document.getElementById('authError'),
+	forgotEmail: document.getElementById('forgotEmail'),
+	forgotSubmit: document.getElementById('forgotSubmit'),
+	forgotPasswordBtn: document.getElementById('forgotPassword'),
+	facebookLogin: document.getElementById('facebookLogin'),
+	facebookSignup: document.getElementById('facebookSignup'),
+	phoneLogin: document.getElementById('phoneLogin'),
+	phoneSignup: document.getElementById('phoneSignup'),
+	phonePanel: document.querySelector('[data-panel="phone"]'),
+	phoneNumber: document.getElementById('phoneNumber'),
+	phoneCode: document.getElementById('phoneCode'),
+	sendOtp: document.getElementById('sendOtp'),
+    confirmOtp: document.getElementById('confirmOtp'),
+    authBody: document.querySelector('#authDialog .auth-body'),
+    toggleBtn: document.getElementById('toggleBtn'),
+    toggleText: document.getElementById('toggleText')
 };
 
 const state = {
@@ -148,7 +178,93 @@ function updateCartItem(productId, action){
 function openCart(){ dom.cartDrawer.hidden = false; }
 function closeCart(){ dom.cartDrawer.hidden = true; }
 
+// --- Auth UI helpers ---
+function updateAuthUI(){
+	const me = getCurrentUser();
+	if(me){
+		dom.loginButton.hidden = true;
+		dom.userMenu.hidden = false;
+		dom.userName.textContent = me.name || me.email;
+	} else {
+		dom.loginButton.hidden = false;
+		dom.userMenu.hidden = true;
+		dom.userName.textContent = '';
+	}
+}
+
+function openAuth(tab = 'login'){
+	setAuthTab(tab);
+	if(typeof dom.authDialog.showModal === 'function') dom.authDialog.showModal();
+	else dom.authDialog.open = true;
+}
+function closeAuth(){
+	if(typeof dom.authDialog.close === 'function') dom.authDialog.close();
+	else dom.authDialog.open = false;
+}
+
+function setAuthTab(tab){
+	dom.authTabs.forEach(btn => {
+		const active = btn.dataset.tab === tab;
+		btn.classList.toggle('active', active);
+	});
+    const isSlide = tab === 'login' || tab === 'register';
+    const slideWrapper = dom.authBody.querySelector('.slide-wrapper');
+
+    // Toggle sliding states
+    dom.authBody.classList.toggle('sign-in', tab === 'login');
+    dom.authBody.classList.toggle('sign-up', tab === 'register');
+
+    // Show/hide the slider container vs standalone panels
+    if(slideWrapper){ slideWrapper.hidden = !isSlide; }
+
+    // Only toggle visibility for non-sliding panels (forgot/phone)
+    dom.authPanels.forEach(panel => {
+        const name = panel.dataset.panel;
+        const isSlidingPanel = name === 'login' || name === 'register';
+        if(isSlidingPanel){
+            panel.hidden = false; // keep both visible for layout when sliding
+        } else {
+            panel.hidden = name !== tab; // show only the selected standalone panel
+        }
+    });
+    dom.authError.hidden = true;
+    dom.authError.textContent = '';
+
+    // Update title and toggle text/button if present
+    const title = document.getElementById('authTitle');
+    if(title){ title.textContent = tab === 'register' ? 'Sign Up' : 'Sign In'; }
+    if(dom.toggleBtn && dom.toggleText){
+        if(tab === 'login'){
+            dom.toggleText.textContent = 'Chưa có tài khoản?';
+            dom.toggleBtn.textContent = 'Đăng ký';
+        } else if(tab === 'register'){
+            dom.toggleText.textContent = 'Đã có tài khoản?';
+            dom.toggleBtn.textContent = 'Đăng nhập';
+        }
+    }
+}
+
+function simulateFacebookAuth(){
+	// demo user
+	const user = { id: 'fb-' + Date.now(), name: 'Facebook User', email: 'fbuser@example.com' };
+	setCurrentUser(user);
+	closeAuth();
+	updateAuthUI();
+}
+
+function simulateSendOtp(phone){
+	if(!/^\d{9,12}$/.test(phone.replace(/\D/g,''))) throw new Error('Số điện thoại không hợp lệ');
+	try{ localStorage.setItem('shoplite_last_phone', phone); }catch{}
+	return '1234';
+}
+
+function simulateVerifyOtp(code){
+	return code === '1234';
+}
+
 function startCheckout(){
+	const me = getCurrentUser();
+	if(!me){ openAuth('login'); return; }
 	closeCart();
 	dom.checkoutSection.hidden = false;
 	window.scrollTo({ top: dom.checkoutSection.offsetTop - 20, behavior: 'smooth' });
@@ -183,6 +299,8 @@ function handleCheckoutSubmit(e){
 function showSectionFromHash(){
 	const hash = location.hash.replace('#','');
 	if(hash === 'sell'){
+		const me = getCurrentUser();
+		if(!me){ openAuth('login'); location.hash = ''; return; }
 		dom.sellSection.hidden = false;
 		dom.checkoutSection.hidden = true;
 	} else {
@@ -242,6 +360,98 @@ function wireEvents(){
 	// Sell form
 	dom.sellForm.addEventListener('submit', handleSellSubmit);
 	window.addEventListener('hashchange', showSectionFromHash);
+
+	// Auth open/close
+	dom.loginButton.addEventListener('click', ()=> openAuth('login'));
+	dom.closeAuth.addEventListener('click', ()=> closeAuth());
+	dom.logoutButton.addEventListener('click', ()=>{ logoutCurrentUser(); updateAuthUI(); alert('Đã đăng xuất'); });
+	dom.authTabs.forEach(btn => btn.addEventListener('click', ()=> setAuthTab(btn.dataset.tab)));
+
+    // Toggle link behavior
+    if(dom.toggleBtn){
+        dom.toggleBtn.addEventListener('click', ()=>{
+            const next = dom.authBody.classList.contains('sign-in') ? 'register' : 'login';
+            setAuthTab(next);
+        });
+    }
+
+	// Toggle password visibility
+	document.querySelectorAll('.peek-btn').forEach(btn => {
+		btn.addEventListener('click', ()=>{
+			const targetId = btn.getAttribute('data-target');
+			const input = document.getElementById(targetId);
+			if(!input) return;
+			input.type = input.type === 'password' ? 'text' : 'password';
+			btn.textContent = input.type === 'password' ? '👁' : '🙈';
+		});
+	});
+
+	// Forgot password
+	dom.forgotPasswordBtn.addEventListener('click', ()=> setAuthTab('forgot'));
+	dom.forgotSubmit.addEventListener('click', ()=>{
+		try{
+			const email = dom.forgotEmail.value.trim();
+			if(!email) throw new Error('Vui lòng nhập email');
+			requestPasswordReset(email);
+			alert('Đã gửi liên kết đặt lại (mô phỏng). Vui lòng kiểm tra email.');
+			setAuthTab('login');
+		}catch(err){ dom.authError.textContent = err?.message || 'Đã xảy ra lỗi'; dom.authError.hidden = false; }
+	});
+
+	// Social/phone handlers
+	dom.facebookLogin.addEventListener('click', simulateFacebookAuth);
+	dom.facebookSignup.addEventListener('click', simulateFacebookAuth);
+	dom.phoneLogin.addEventListener('click', ()=> setAuthTab('phone'));
+	dom.phoneSignup.addEventListener('click', ()=> setAuthTab('phone'));
+	dom.sendOtp.addEventListener('click', ()=>{
+		try{
+			const phone = dom.phoneNumber.value.trim();
+			simulateSendOtp(phone);
+			alert('Đã gửi OTP: 1234 (mô phỏng)');
+		}catch(err){ dom.authError.textContent = err?.message || 'Lỗi gửi OTP'; dom.authError.hidden = false; }
+	});
+	dom.confirmOtp.addEventListener('click', ()=>{
+		const code = dom.phoneCode.value.trim();
+		if(simulateVerifyOtp(code)){
+			const phone = dom.phoneNumber.value.trim();
+			const user = { id: 'ph-' + Date.now(), name: 'User '+phone.slice(-4), email: phone+'@phone.local' };
+			setCurrentUser(user);
+			closeAuth();
+			updateAuthUI();
+		}else{
+			dom.authError.textContent = 'Mã OTP không đúng';
+			dom.authError.hidden = false;
+		}
+	});
+
+	// Auth form submit
+	dom.authForm.addEventListener('submit', (e)=>{
+		e.preventDefault();
+		const activeTab = [...dom.authTabs].find(b=>b.classList.contains('active'))?.dataset.tab || 'login';
+		dom.authError.hidden = true; dom.authError.textContent = '';
+		try{
+			if(activeTab === 'login'){
+				const email = dom.loginEmail.value.trim();
+				const password = dom.loginPassword.value;
+				const user = authenticateUser({ email, password });
+				setCurrentUser(user);
+				closeAuth();
+				updateAuthUI();
+			} else {
+				const name = dom.regName.value.trim();
+				const email = dom.regEmail.value.trim();
+				const password = dom.regPassword.value;
+				if(!name){ throw new Error('Vui lòng nhập họ tên'); }
+				const user = registerUser({ name, email, password });
+				setCurrentUser(user);
+				closeAuth();
+				updateAuthUI();
+			}
+		}catch(err){
+			dom.authError.textContent = err?.message || 'Đã xảy ra lỗi';
+			dom.authError.hidden = false;
+		}
+	});
 }
 
 function init(){
@@ -250,85 +460,11 @@ function init(){
 	renderGrid();
 	renderCart();
 	showSectionFromHash();
+	updateAuthUI();
 	wireEvents();
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
-// Auth modal wiring
-(function(){
-	const openBtn = document.getElementById('openAuth');
-	const modal = document.getElementById('authModal');
-	const closeBtn = document.getElementById('authClose');
-	const backdrop = document.getElementById('authBackdrop');
-	const toSignup = document.getElementById('toggleToSignup');
-	const toSignin = document.getElementById('toggleToSignin');
-	const signInForm = document.getElementById('signInForm');
-	const signUpForm = document.getElementById('signUpForm');
-	const signinBtn = document.getElementById('signinBtn');
-	const signupBtn = document.getElementById('signupBtn');
-
-	function open(){ modal.hidden = false; }
-	function close(){ modal.hidden = true; }
-	function showSignin(){ signInForm.hidden = false; signUpForm.hidden = true; }
-	function showSignup(){ signInForm.hidden = true; signUpForm.hidden = false; }
-
-	if(openBtn){ openBtn.addEventListener('click', open); }
-	if(closeBtn){ closeBtn.addEventListener('click', close); }
-	if(backdrop){ backdrop.addEventListener('click', close); }
-	if(toSignup){ toSignup.addEventListener('click', showSignup); }
-	if(toSignin){ toSignin.addEventListener('click', showSignin); }
-
-	if(signinBtn){
-		signinBtn.addEventListener('click', ()=>{
-			const email = document.getElementById('signinEmail').value.trim();
-			const password = document.getElementById('signinPassword').value.trim();
-			if(!email || !password){ alert('Please enter email and password.'); return; }
-			alert('Signed in (demo).');
-			close();
-		});
-	}
-	if(signupBtn){
-		signupBtn.addEventListener('click', ()=>{
-			const username = document.getElementById('signupUsername').value.trim();
-			const email = document.getElementById('signupEmail').value.trim();
-			const phone = document.getElementById('signupPhone').value.trim();
-			const password = document.getElementById('signupPassword').value.trim();
-			if(!username || !email || !phone || !password){ alert('Please complete all fields.'); return; }
-			alert('Account created (demo).');
-			showSignin();
-		});
-	}
-})();
-
-// Auth modal sliding toggle
-(function(){
-	const toSignup = document.getElementById('toggleToSignup');
-	const toSignin = document.getElementById('toggleToSignin');
-	const container = document.getElementById('authContainer');
-	if(!container) return;
-	if(toSignup){ toSignup.addEventListener('click', ()=>{ container.classList.remove('sign-in'); container.classList.add('sign-up'); }); }
-	if(toSignin){ toSignin.addEventListener('click', ()=>{ container.classList.remove('sign-up'); container.classList.add('sign-in'); }); }
-})();
-
-// Password peek toggle
-(function(){
-	document.addEventListener('click', (e)=>{
-		const btn = e.target.closest('.peek-btn');
-		if(!btn) return;
-		const id = btn.getAttribute('data-target');
-		const input = document.getElementById(id);
-		if(!input) return;
-		if(input.type === 'password'){
-			input.type = 'text';
-			btn.setAttribute('aria-label','Hide password');
-		} else {
-			input.type = 'password';
-			btn.setAttribute('aria-label','Show password');
-		}
-	});
-})();
-
 
 
 
