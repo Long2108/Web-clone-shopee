@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
-<body>
+<body style="background:#ffffff;">
+<div aria-hidden="true" style="position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle at center, #FF7112, transparent);opacity:.3;mix-blend-mode:multiply"></div>
+<div style="position:relative;z-index:1;min-height:100vh;">
 <header class="site-header">
 	<div class="container header-inner">
 		<a class="logo" href="#">ShopLite-Buy and Sell</a>
@@ -16,6 +18,7 @@
 		<nav class="actions">
 			<button id="cartButton" class="icon-button" aria-haspopup="dialog" aria-controls="cartDrawer">Giỏ hàng (<span id="cartCount">0</span>)</button>
 			<a id="sellLink" class="button" href="#sell">Bán</a>
+			<button id="openAuth" class="button">Đăng nhập</button>
 		</nav>
 	</div>
 </header>
@@ -109,16 +112,54 @@
 	</form>
 </section>
 
+<!-- Auth Modal -->
+<div id="authModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle" hidden>
+	<div class="modal-backdrop" id="authBackdrop"></div>
+	<div class="modal-panel">
+		<button class="icon-button modal-close" id="authClose" aria-label="Close">×</button>
+		<div class="auth-container sign-in" id="authContainer">
+			<div class="form-box">
+				<div class="form" id="signInPane">
+					<h2 id="authTitle">Sign In</h2>
+					<input type="email" id="signinEmail" placeholder="Email" required>
+					<div class="input-wrap">
+						<input type="password" id="signinPassword" placeholder="Password" required>
+						<button type="button" class="peek-btn" aria-label="Show password" data-target="signinPassword">👁</button>
+					</div>
+					<button class="button primary" id="signinBtn">Login</button>
+					<div class="toggle-box">
+						<p><span id="toggleText">Don't have an account?</span> <a id="toggleToSignup" class="link">Sign Up</a></p>
+					</div>
+				</div>
+				<div class="form" id="signUpPane">
+					<h2>Sign Up</h2>
+					<input type="text" id="signupUsername" placeholder="User name" required>
+					<input type="email" id="signupEmail" placeholder="Email" required>
+					<input type="number" id="signupPhone" placeholder="Phone number" required>
+					<div class="input-wrap">
+						<input type="password" id="signupPassword" placeholder="Password" required>
+						<button type="button" class="peek-btn" aria-label="Show password" data-target="signupPassword">👁</button>
+					</div>
+					<button class="button primary" id="signupBtn">Register</button>
+					<div class="toggle-box">
+						<p><span>Already have an account?</span> <a id="toggleToSignin" class="link">Sign In</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <footer class="site-footer">
 	<div class="container">
 		<p>© <span id="year"></span> ShopLite. Not affiliated with Shopee.</p>
 	</div>
 </footer>
+</div>
 
 <script src="assets/data.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>
-
 
 
