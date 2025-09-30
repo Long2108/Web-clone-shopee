@@ -1,0 +1,59 @@
+:root{--bg:#eb1bbe;--panel:#121821;--muted:#0058d3;--text:#1ac71a;--sub:#942056;--brand:#ff6b3d;--brand-2:#ff9f43;--ok:#22c55e;--danger:#ef4444}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;}
+img{max-width:100%;display:block}
+.container{width:min(1100px,92%);margin-inline:auto}
+.button{background:var(--muted);color:var(--text);border:none;padding:.6rem 1rem;border-radius:10px;cursor:pointer}
+.button.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#0b0f14;font-weight:700}
+.icon-button{background:transparent;color:var(--text);border:1px solid var(--muted);padding:.4rem .6rem;border-radius:10px;cursor:pointer}
+.logo{font-weight:900;color:var(--text);text-decoration:none;letter-spacing:.5px}
+
+.site-header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.8);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06)}
+.header-inner{display:flex;align-items:center;gap:1rem;padding:.8rem 0}
+.search{display:flex;gap:.5rem;flex:1}
+.search input{flex:1;background:var(--panel);border:1px solid var(--muted);color:var(--text);padding:.6rem .8rem;border-radius:10px}
+.actions{display:flex;gap:.6rem}
+
+.filters{display:flex;gap:.6rem;align-items:center;justify-content:flex-end;margin:1rem 0}
+.filters select{background:var(--panel);border:1px solid var(--muted);color:var(--text);padding:.5rem .6rem;border-radius:10px}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1rem 0 2rem}
+.card{background:var(--panel);border:1px solid var(--muted);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.card .thumb{aspect-ratio:4/3;background:#0e131b;display:grid;place-items:center}
+.card .body{padding:.8rem}
+.card .title{font-weight:700;margin:0 0 .25rem}
+.card .price{font-weight:800;color:var(--brand-2);margin:.25rem 0}
+.card .meta{color:var(--sub);font-size:.9rem}
+.card .cta{display:flex;gap:.5rem;margin-top:.6rem}
+
+.cart{position:fixed;right:1rem;top:1rem;width:min(420px,92%);background:var(--panel);border:1px solid var(--muted);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:flex;flex-direction:column;max-height:90vh}
+.cart[hidden]{display:none}
+.cart-header{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;border-bottom:1px solid var(--muted)}
+.cart-items{padding:0 1rem;overflow:auto}
+.cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:.6rem;align-items:center;padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.cart-item .qty{display:flex;align-items:center;gap:.4rem}
+.cart-item .qty button{width:28px;height:28px;border-radius:8px;border:1px solid var(--muted);background:transparent;color:var(--text)}
+.cart-footer{margin-top:auto;padding:1rem;border-top:1px solid var(--muted);display:flex;gap:.8rem;align-items:center;justify-content:space-between}
+.cart-summary{display:flex;gap:.6rem;align-items:center}
+
+.checkout,.sell{background:var(--panel);border:1px solid var(--muted);border-radius:16px;padding:1rem;margin:1rem auto}
+.checkout-form .row,.sell-form .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.checkout-form input, .checkout-form textarea, .checkout-form select,
+.sell-form input, .sell-form textarea, .sell-form select{background:#0e131b;border:1px solid var(--muted);color:var(--text);padding:.6rem .7rem;border-radius:10px;width:100%}
+.order-result{margin-top:1rem;padding:1rem;border:1px solid var(--muted);border-radius:12px;background:#0e131b}
+
+.site-footer{border-top:1px solid rgba(255,255,255,.06);margin-top:2rem}
+.site-footer .container{padding:1rem 0;color:var(--sub)}
+
+@media (max-width: 1024px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width: 768px){
+	.header-inner{flex-wrap:wrap}
+	.actions{margin-left:auto}
+	.grid{grid-template-columns:repeat(2,1fr)}
+	.checkout-form .row,.sell-form .row{grid-template-columns:1fr}
+}
+@media (max-width: 480px){.grid{grid-template-columns:1fr}}
+
+
+
+

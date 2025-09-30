@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<header class="site-header">
+	<div class="container header-inner">
+		<a class="logo" href="#">ShopLite-Buy and Sell</a>
+		<form id="searchForm" class="search">
+			<input id="searchInput" type="search" placeholder="Search for products…" aria-label="Search">
+			<button type="submit">Tìm kiếm</button>
+		</form>
+		<nav class="actions">
+			<button id="cartButton" class="icon-button" aria-haspopup="dialog" aria-controls="cartDrawer">Giỏ hàng (<span id="cartCount">0</span>)</button>
+			<a id="sellLink" class="button" href="#sell">Bán</a>
+		</nav>
+	</div>
+</header>
+
+<main class="container">
+	<section id="filters" class="filters">
+		<select id="categoryFilter" aria-label="Category filter">
+			<option value="">Tất cả sản phẩm</option>
+		</select>
+		<select id="sortSelect" aria-label="Sort products">
+			<option value="popular">Phổ biến nhất</option>
+			<option value="price-asc">Giá: Thấp đến cao</option>
+			<option value="price-desc">Giá: Cao đến thấp</option>
+			<option value="newest">Mới nhất</option>
+		</select>
+	</section>
+
+	<section id="productGrid" class="grid" aria-live="polite"></section>
+</main>
+
+<aside id="cartDrawer" class="cart" role="dialog" aria-modal="true" aria-labelledby="cartTitle" hidden>
+	<div class="cart-header">
+		<h2 id="cartTitle">Giỏ hàng của bạn</h2>
+		<button id="closeCart" class="icon-button" aria-label="Close cart">×</button>
+	</div>
+	<div id="cartItems" class="cart-items"></div>
+	<div class="cart-footer">
+		<div class="cart-summary">
+			<span>Tổng tiền:</span>
+			<strong id="cartSubtotal">$0.00</strong>
+		</div>
+		<button id="checkoutButton" class="button primary">Thanh toán</button>
+	</div>
+</aside>
+
+<section id="checkoutSection" class="checkout container" hidden>
+	<h2>Thanh toán</h2>
+	<form id="checkoutForm" class="checkout-form">
+		<div class="row">
+			<label>Họ và tên
+				<input id="fullName" required>
+			</label>
+			<label>Số điện thoại
+				<input id="phone" type="tel" required>
+			</label>
+		</div>
+		<label>Địa chỉ nhận hàng
+			<textarea id="address" rows="3" required></textarea>
+		</label>
+		<div class="row">
+			<label>Phương thức thanh toán
+				<select id="payment" required>
+					<option value="cod">Thanh toán khi nhận hàng</option>
+					<option value="card">Thanh toán bằng thẻ tín dụng/ thẻ ghi nợ</option>
+				</select>
+			</label>
+			<label>Notes
+				<input id="notes" placeholder="Optional">
+			</label>
+		</div>
+		<button type="submit" class="button primary">Place Order</button>
+		<button type="button" id="cancelCheckout" class="button">Cancel</button>
+	</form>
+	<div id="orderResult" class="order-result" hidden></div>
+</section>
+
+<section id="sell" class="sell container" hidden>
+	<h2>Sell a Product</h2>
+	<form id="sellForm" class="sell-form">
+		<div class="row">
+			<label>Title
+				<input id="sellTitle" required>
+			</label>
+			<label>Price (USD)
+				<input id="sellPrice" type="number" min="0" step="0.01" required>
+			</label>
+		</div>
+		<div class="row">
+			<label>Category
+				<input id="sellCategory" list="categoriesList" required>
+				<datalist id="categoriesList"></datalist>
+			</label>
+			<label>Image URL
+				<input id="sellImage" placeholder="https://…">
+			</label>
+		</div>
+		<label>Description
+			<textarea id="sellDescription" rows="3" required></textarea>
+		</label>
+		<button type="submit" class="button primary">Add Product</button>
+	</form>
+</section>
+
+<footer class="site-footer">
+	<div class="container">
+		<p>© <span id="year"></span> ShopLite. Not affiliated with Shopee.</p>
+	</div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
+
+
